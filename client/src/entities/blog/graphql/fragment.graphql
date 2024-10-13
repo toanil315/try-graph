@@ -1,0 +1,24 @@
+fragment BlogItem on Post {
+  id
+  title
+  content
+  createAt
+  image
+  author {
+    name
+  }
+}
+
+fragment BlogDetail on Post {
+  id
+  title
+  image
+  content
+  body
+  createAt
+  authorId
+  author {
+    id
+    name
+  }
+}

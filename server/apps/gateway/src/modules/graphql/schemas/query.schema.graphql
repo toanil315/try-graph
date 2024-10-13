@@ -1,0 +1,7 @@
+type Query {
+  getPosts: [Post]!
+  getPostById(id: ID!): Post
+
+  getAuthors: [Author]!
+  getAuthorById(id: ID!): Author
+}

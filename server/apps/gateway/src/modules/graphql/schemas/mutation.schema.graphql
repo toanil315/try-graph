@@ -1,0 +1,5 @@
+type Mutation {
+  createPost(data: CreatePostRequest!): Post
+  updatePost(id: ID!, data: CreatePostRequest!): Post
+  deletePost(id: ID!): Post
+}
