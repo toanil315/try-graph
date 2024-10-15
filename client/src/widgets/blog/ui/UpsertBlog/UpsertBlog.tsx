@@ -7,10 +7,12 @@ import BlogForm from './BlogForm';
 import { useNavigate } from 'react-router-dom';
 import {
   CreatePostRequest,
+  GetPostsDocument,
   useCreatePostMutation,
   useGetPostByIdQuery,
   useUpdatePostMutation,
 } from '@/generated/schemas';
+import { useApolloClient } from '@apollo/client';
 
 interface Props {
   type: ACTION_ENUM;
@@ -26,7 +28,10 @@ export const UpsertBlog = ({ type, blogId }: Props) => {
     skip: type === ACTION_ENUM.CREATE || !blogId,
   });
   const blog = data?.getPostById;
-  const [createBlog, { loading: createBlogLoading }] = useCreatePostMutation();
+  const client = useApolloClient();
+  const [createBlog, { loading: createBlogLoading }] = useCreatePostMutation({
+    refetchQueries: [{ query: GetPostsDocument }],
+  });
   const [updateBlog, { loading: updateBlogLoading }] = useUpdatePostMutation();
 
   const form = useForm<CreatePostRequest>({
