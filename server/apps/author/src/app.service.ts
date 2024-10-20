@@ -10,7 +10,7 @@ export class AuthorService {
     },
     {
       id: '2',
-      name: 'Phuong Le',
+      name: 'Chorus 2 team',
     },
   ];
 

@@ -1,4 +1,4 @@
-import { Inject, OnModuleInit } from '@nestjs/common';
+import { Inject, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { ClientGrpc } from '@nestjs/microservices';
 import { POST_SERVICE_NAME, PostServiceClient } from '../../proto/post';
@@ -28,6 +28,21 @@ export class PostQueryResolver implements OnModuleInit {
     @Args('id')
     id: string,
   ) {
-    return this.postService.getPostById({ id });
+    const post = await this.postService.getPostById({ id }).toPromise();
+    if (!post.id) {
+      throw new NotFoundException('Post not found');
+    }
+    return post;
+  }
+
+  @Query('getPostComments')
+  async getPostComments(
+    @Args('postId')
+    postId: string,
+  ) {
+    const comments = await this.postService
+      .getPostComments({ postId })
+      .toPromise();
+    return comments.comments;
   }
 }

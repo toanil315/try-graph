@@ -9,3 +9,12 @@ query GetPostById($getPostByIdId: ID!) {
     ...BlogDetail
   }
 }
+
+query GetPostComments($postId: ID!) {
+  getPostComments(postId: $postId) {
+    id
+    comment
+    createAt
+    postId
+  }
+}

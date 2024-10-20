@@ -12,6 +12,11 @@ export interface CreateAuthorRequest {
     name: string;
 }
 
+export interface CreateCommentRequest {
+    comment: string;
+    postId: string;
+}
+
 export interface CreatePostRequest {
     title: string;
     image: string;
@@ -25,10 +30,18 @@ export interface Author {
     name: string;
 }
 
+export interface Comment {
+    id: string;
+    comment: string;
+    createAt: string;
+    postId: string;
+}
+
 export interface IMutation {
     createPost(data: CreatePostRequest): Nullable<Post> | Promise<Nullable<Post>>;
     updatePost(id: string, data: CreatePostRequest): Nullable<Post> | Promise<Nullable<Post>>;
     deletePost(id: string): Nullable<Post> | Promise<Nullable<Post>>;
+    createComment(data: CreateCommentRequest): Nullable<Comment> | Promise<Nullable<Comment>>;
 }
 
 export interface Post {
@@ -45,8 +58,13 @@ export interface Post {
 export interface IQuery {
     getPosts(): Nullable<Post>[] | Promise<Nullable<Post>[]>;
     getPostById(id: string): Nullable<Post> | Promise<Nullable<Post>>;
+    getPostComments(postId: string): Nullable<Comment>[] | Promise<Nullable<Comment>[]>;
     getAuthors(): Nullable<Author>[] | Promise<Nullable<Author>[]>;
     getAuthorById(id: string): Nullable<Author> | Promise<Nullable<Author>>;
+}
+
+export interface ISubscription {
+    commentAdded(postId: string): Comment | Promise<Comment>;
 }
 
 type Nullable<T> = T | null;

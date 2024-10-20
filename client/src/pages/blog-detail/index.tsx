@@ -1,7 +1,12 @@
-import { BlogDetail } from '@/widgets/blog';
+import { BlogComments, BlogDetail } from '@/widgets/blog';
 
 const BlogDetailPage = () => {
-  return <BlogDetail />;
+  return (
+    <div>
+      <BlogDetail />
+      <BlogComments />
+    </div>
+  );
 };
 
 export default BlogDetailPage;

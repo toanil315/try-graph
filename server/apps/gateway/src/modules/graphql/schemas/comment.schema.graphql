@@ -1,0 +1,11 @@
+type Comment {
+  id: ID!
+  comment: String!
+  createAt: String!
+  postId: ID!
+}
+
+input CreateCommentRequest {
+  comment: String!
+  postId: ID!
+}

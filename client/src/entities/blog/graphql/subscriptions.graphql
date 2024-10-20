@@ -1,0 +1,5 @@
+subscription CommentAdded($postId: ID!) {
+  commentAdded(postId: $postId) {
+    ...CommentItem
+  }
+}

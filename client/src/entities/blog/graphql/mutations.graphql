@@ -9,3 +9,9 @@ mutation UpdatePost($updatePostId: ID!, $data: CreatePostRequest!) {
     ...BlogDetail
   }
 }
+
+mutation CreateComment($data: CreateCommentRequest!) {
+  createComment(data: $data) {
+    ...CommentItem
+  }
+}

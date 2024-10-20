@@ -14,6 +14,7 @@ export const protobufPackage = "post";
 export interface Empty {
 }
 
+/** Posts */
 export interface PostDetailRequest {
   id: string;
 }
@@ -50,6 +51,27 @@ export interface PostList {
   posts: Post[];
 }
 
+/** Comments */
+export interface Comment {
+  id: string;
+  comment: string;
+  createAt: string;
+  postId: string;
+}
+
+export interface PostCommentsRequest {
+  postId: string;
+}
+
+export interface CreateCommentRequest {
+  comment: string;
+  postId: string;
+}
+
+export interface CommentList {
+  comments: Comment[];
+}
+
 export const POST_PACKAGE_NAME = "post";
 
 export interface PostServiceClient {
@@ -62,6 +84,10 @@ export interface PostServiceClient {
   updatePost(request: Post, metadata?: Metadata): Observable<Post>;
 
   deletePost(request: DeletePostRequest, metadata?: Metadata): Observable<Post>;
+
+  getPostComments(request: PostCommentsRequest, metadata?: Metadata): Observable<CommentList>;
+
+  createComment(request: CreateCommentRequest, metadata?: Metadata): Observable<Comment>;
 }
 
 export interface PostServiceController {
@@ -74,11 +100,26 @@ export interface PostServiceController {
   updatePost(request: Post, metadata?: Metadata): Promise<Post> | Observable<Post> | Post;
 
   deletePost(request: DeletePostRequest, metadata?: Metadata): Promise<Post> | Observable<Post> | Post;
+
+  getPostComments(
+    request: PostCommentsRequest,
+    metadata?: Metadata,
+  ): Promise<CommentList> | Observable<CommentList> | CommentList;
+
+  createComment(request: CreateCommentRequest, metadata?: Metadata): Promise<Comment> | Observable<Comment> | Comment;
 }
 
 export function PostServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getPosts", "getPostById", "createPost", "updatePost", "deletePost"];
+    const grpcMethods: string[] = [
+      "getPosts",
+      "getPostById",
+      "createPost",
+      "updatePost",
+      "deletePost",
+      "getPostComments",
+      "createComment",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("PostService", method)(constructor.prototype[method], method, descriptor);

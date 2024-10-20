@@ -36,4 +36,12 @@ export class PostController implements PostServiceController {
   ): Promise<Post> | Observable<Post> | Post {
     return this.postService.deletePost(request.id);
   }
+
+  getPostComments(request: { postId: string }) {
+    return this.postService.getPostComments(request.postId);
+  }
+
+  createComment(request: { comment: string; postId: string }) {
+    return this.postService.createComment(request);
+  }
 }

@@ -8,10 +8,14 @@ service PostService {
   rpc createPost (CreatePostRequest) returns (Post);
   rpc updatePost (Post) returns (Post);
   rpc deletePost (DeletePostRequest) returns (Post);
+
+  rpc getPostComments (PostCommentsRequest) returns (CommentList);
+  rpc createComment (CreateCommentRequest) returns (Comment);
 }
 
 message Empty {}
 
+// Posts
 message PostDetailRequest {
     string id = 1;
 }
@@ -46,4 +50,25 @@ message DeletePostRequest {
 
 message PostList {
   repeated Post posts = 1;
+}
+
+// Comments
+message Comment {
+    string id = 1;
+    string comment = 2;
+    string createAt = 3;
+    string postId = 4;
+  }
+  
+message PostCommentsRequest {
+    string postId = 1;
+}
+
+message CreateCommentRequest {
+    string comment = 1;
+    string postId = 2;
+}
+
+message CommentList {
+  repeated Comment comments = 1;
 }

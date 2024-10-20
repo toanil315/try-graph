@@ -26,8 +26,20 @@ export type Author = {
   name: Scalars['String']['output'];
 };
 
+export type Comment = {
+  comment: Scalars['String']['output'];
+  createAt: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  postId: Scalars['ID']['output'];
+};
+
 export type CreateAuthorRequest = {
   name: Scalars['String']['input'];
+};
+
+export type CreateCommentRequest = {
+  comment: Scalars['String']['input'];
+  postId: Scalars['ID']['input'];
 };
 
 export type CreatePostRequest = {
@@ -39,9 +51,14 @@ export type CreatePostRequest = {
 };
 
 export type Mutation = {
+  createComment?: Maybe<Comment>;
   createPost?: Maybe<Post>;
   deletePost?: Maybe<Post>;
   updatePost?: Maybe<Post>;
+};
+
+export type MutationCreateCommentArgs = {
+  data: CreateCommentRequest;
 };
 
 export type MutationCreatePostArgs = {
@@ -72,6 +89,7 @@ export type Query = {
   getAuthorById?: Maybe<Author>;
   getAuthors: Array<Maybe<Author>>;
   getPostById?: Maybe<Post>;
+  getPostComments: Array<Maybe<Comment>>;
   getPosts: Array<Maybe<Post>>;
 };
 
@@ -81,6 +99,18 @@ export type QueryGetAuthorByIdArgs = {
 
 export type QueryGetPostByIdArgs = {
   id: Scalars['ID']['input'];
+};
+
+export type QueryGetPostCommentsArgs = {
+  postId: Scalars['ID']['input'];
+};
+
+export type Subscription = {
+  commentAdded: Comment;
+};
+
+export type SubscriptionCommentAddedArgs = {
+  postId: Scalars['ID']['input'];
 };
 
 export const BlogItemFragmentDoc = gql`
@@ -108,6 +138,13 @@ export const BlogDetailFragmentDoc = gql`
       id
       name
     }
+  }
+`;
+export const CommentItemFragmentDoc = gql`
+  fragment CommentItem on Comment {
+    id
+    comment
+    createAt
   }
 `;
 export const CreatePostDocument = gql`
@@ -200,6 +237,51 @@ export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>
 export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<
   UpdatePostMutation,
   UpdatePostMutationVariables
+>;
+export const CreateCommentDocument = gql`
+  mutation CreateComment($data: CreateCommentRequest!) {
+    createComment(data: $data) {
+      ...CommentItem
+    }
+  }
+  ${CommentItemFragmentDoc}
+`;
+export type CreateCommentMutationFn = Apollo.MutationFunction<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(
+    CreateCommentDocument,
+    options,
+  );
+}
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
 >;
 export const GetPostsDocument = gql`
   query GetPosts {
@@ -316,6 +398,116 @@ export type GetPostByIdQueryResult = Apollo.QueryResult<
 export function refetchGetPostByIdQuery(variables: GetPostByIdQueryVariables) {
   return { query: GetPostByIdDocument, variables: variables };
 }
+export const GetPostCommentsDocument = gql`
+  query GetPostComments($postId: ID!) {
+    getPostComments(postId: $postId) {
+      id
+      comment
+      createAt
+      postId
+    }
+  }
+`;
+
+/**
+ * __useGetPostCommentsQuery__
+ *
+ * To run a query within a React component, call `useGetPostCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostCommentsQuery({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useGetPostCommentsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetPostCommentsQuery, GetPostCommentsQueryVariables> &
+    ({ variables: GetPostCommentsQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPostCommentsQuery, GetPostCommentsQueryVariables>(
+    GetPostCommentsDocument,
+    options,
+  );
+}
+export function useGetPostCommentsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPostCommentsQuery, GetPostCommentsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPostCommentsQuery, GetPostCommentsQueryVariables>(
+    GetPostCommentsDocument,
+    options,
+  );
+}
+export function useGetPostCommentsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetPostCommentsQuery, GetPostCommentsQueryVariables>,
+) {
+  const options =
+    baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetPostCommentsQuery, GetPostCommentsQueryVariables>(
+    GetPostCommentsDocument,
+    options,
+  );
+}
+export type GetPostCommentsQueryHookResult = ReturnType<typeof useGetPostCommentsQuery>;
+export type GetPostCommentsLazyQueryHookResult = ReturnType<typeof useGetPostCommentsLazyQuery>;
+export type GetPostCommentsSuspenseQueryHookResult = ReturnType<
+  typeof useGetPostCommentsSuspenseQuery
+>;
+export type GetPostCommentsQueryResult = Apollo.QueryResult<
+  GetPostCommentsQuery,
+  GetPostCommentsQueryVariables
+>;
+export function refetchGetPostCommentsQuery(variables: GetPostCommentsQueryVariables) {
+  return { query: GetPostCommentsDocument, variables: variables };
+}
+export const CommentAddedDocument = gql`
+  subscription CommentAdded($postId: ID!) {
+    commentAdded(postId: $postId) {
+      ...CommentItem
+    }
+  }
+  ${CommentItemFragmentDoc}
+`;
+
+/**
+ * __useCommentAddedSubscription__
+ *
+ * To run a query within a React component, call `useCommentAddedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useCommentAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentAddedSubscription({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useCommentAddedSubscription(
+  baseOptions: Apollo.SubscriptionHookOptions<
+    CommentAddedSubscription,
+    CommentAddedSubscriptionVariables
+  > &
+    ({ variables: CommentAddedSubscriptionVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSubscription<CommentAddedSubscription, CommentAddedSubscriptionVariables>(
+    CommentAddedDocument,
+    options,
+  );
+}
+export type CommentAddedSubscriptionHookResult = ReturnType<typeof useCommentAddedSubscription>;
+export type CommentAddedSubscriptionResult = Apollo.SubscriptionResult<CommentAddedSubscription>;
 export type BlogItemFragment = {
   id: string;
   title: string;
@@ -335,6 +527,8 @@ export type BlogDetailFragment = {
   authorId: string;
   author?: { id: string; name: string } | null;
 };
+
+export type CommentItemFragment = { id: string; comment: string; createAt: string };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostRequest;
@@ -371,6 +565,14 @@ export type UpdatePostMutation = {
   } | null;
 };
 
+export type CreateCommentMutationVariables = Exact<{
+  data: CreateCommentRequest;
+}>;
+
+export type CreateCommentMutation = {
+  createComment?: { id: string; comment: string; createAt: string } | null;
+};
+
 export type GetPostsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetPostsQuery = {
@@ -399,4 +601,20 @@ export type GetPostByIdQuery = {
     authorId: string;
     author?: { id: string; name: string } | null;
   } | null;
+};
+
+export type GetPostCommentsQueryVariables = Exact<{
+  postId: Scalars['ID']['input'];
+}>;
+
+export type GetPostCommentsQuery = {
+  getPostComments: Array<{ id: string; comment: string; createAt: string; postId: string } | null>;
+};
+
+export type CommentAddedSubscriptionVariables = Exact<{
+  postId: Scalars['ID']['input'];
+}>;
+
+export type CommentAddedSubscription = {
+  commentAdded: { id: string; comment: string; createAt: string };
 };

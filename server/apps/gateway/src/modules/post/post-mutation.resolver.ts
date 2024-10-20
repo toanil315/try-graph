@@ -6,7 +6,9 @@ import {
   CreatePostRequest,
   POST_SERVICE_NAME,
   Post,
+  CreateCommentRequest,
 } from '../../proto/post';
+import { PubSub } from 'graphql-subscriptions';
 
 @Resolver('Post')
 export class PostMutationResolver implements OnModuleInit {
@@ -14,6 +16,7 @@ export class PostMutationResolver implements OnModuleInit {
 
   constructor(
     @Inject('POST_PACKAGE') private readonly clientService: ClientGrpc,
+    @Inject('PubSubService') private readonly pubSubService: PubSub,
   ) {}
 
   onModuleInit(): void {
@@ -23,7 +26,6 @@ export class PostMutationResolver implements OnModuleInit {
 
   @Mutation('createPost')
   async createPost(@Args('data') data: CreatePostRequest) {
-    console.log('createPost', data);
     return this.postService.createPost(data);
   }
 
@@ -43,5 +45,16 @@ export class PostMutationResolver implements OnModuleInit {
     return this.postService.deletePost({
       id,
     });
+  }
+
+  @Mutation('createComment')
+  async createComment(
+    @Args('data') createCommentRequest: CreateCommentRequest,
+  ) {
+    console.log('createCommentRequest', createCommentRequest);
+    const newComment = await this.postService
+      .createComment(createCommentRequest)
+      .toPromise();
+    this.pubSubService.publish('commentAdded', newComment);
   }
 }

@@ -22,3 +22,9 @@ fragment BlogDetail on Post {
     name
   }
 }
+
+fragment CommentItem on Comment {
+  id
+  comment
+  createAt
+}
