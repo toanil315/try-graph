@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/client:cached
+      - //var/run/docker.sock://var/run/docker.sock:cached
+    command: sleep infinity

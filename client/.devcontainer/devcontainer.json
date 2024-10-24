@@ -1,0 +1,27 @@
+{
+    "name": "test-dev-container-fe",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "forwardPorts": [3001],
+    "workspaceFolder": "/client",
+    "customizations": {
+      "vscode": {
+        "settings": {
+          // common
+          "editor.formatOnSave": true,
+          "files.autoSave": "onFocusChange"
+        },
+        "extensions": [
+          "zxh404.vscode-proto3",
+          "dbaeumer.vscode-eslint",
+          "esbenp.prettier-vscode",
+        //   "GitHub.copilot"
+        ]
+      }
+    },
+    "mounts": [
+      "source=//var/run/docker.sock,target=//var/run/docker.sock,type=bind,consistency=cached"
+    ],
+    "postCreateCommand": "bash ./.devcontainer/post-install.sh",
+  }
+  

@@ -1,0 +1,17 @@
+mutation CreatePost($data: CreatePostRequest!) {
+  createPost(data: $data) {
+    ...BlogDetail
+  }
+}
+
+mutation UpdatePost($updatePostId: ID!, $data: CreatePostRequest!) {
+  updatePost(id: $updatePostId, data: $data) {
+    ...BlogDetail
+  }
+}
+
+mutation CreateComment($data: CreateCommentRequest!) {
+  createComment(data: $data) {
+    ...CommentItem
+  }
+}
