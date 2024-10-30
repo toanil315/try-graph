@@ -2,9 +2,18 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { SearchBlog } from './SearchBlog';
 import { ROUTES } from '@/shared/constants';
+import { usePostCreatedEmitSubscription } from '@/generated/schemas';
 
 export const Header = () => {
   const { t } = useTranslation();
+  usePostCreatedEmitSubscription({
+    onData: ({ data }) => {
+      console.log(data);
+      if (data.data) {
+        alert(data.data.postCreatedEmit.content);
+      }
+    },
+  });
 
   return (
     <header className=' sticky top-0 z-50 bg-white shadow-md'>

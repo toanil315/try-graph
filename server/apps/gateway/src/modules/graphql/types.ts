@@ -44,6 +44,11 @@ export interface IMutation {
     createComment(data: CreateCommentRequest): Nullable<Comment> | Promise<Nullable<Comment>>;
 }
 
+export interface Notification {
+    id: string;
+    content: string;
+}
+
 export interface Post {
     id: string;
     title: string;
@@ -65,6 +70,7 @@ export interface IQuery {
 
 export interface ISubscription {
     commentAdded(postId: string): Comment | Promise<Comment>;
+    postCreatedEmit(): Notification | Promise<Notification>;
 }
 
 type Nullable<T> = T | null;

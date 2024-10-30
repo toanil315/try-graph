@@ -3,3 +3,10 @@ subscription CommentAdded($postId: ID!) {
     ...CommentItem
   }
 }
+
+subscription PostCreatedEmit {
+  postCreatedEmit {
+    content
+    id
+  }
+}

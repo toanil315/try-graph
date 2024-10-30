@@ -9,6 +9,8 @@ import {
   CreateCommentRequest,
 } from '../../proto/post';
 import { PubSub } from 'graphql-subscriptions';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 @Resolver('Post')
 export class PostMutationResolver implements OnModuleInit {
@@ -17,6 +19,8 @@ export class PostMutationResolver implements OnModuleInit {
   constructor(
     @Inject('POST_PACKAGE') private readonly clientService: ClientGrpc,
     @Inject('PubSubService') private readonly pubSubService: PubSub,
+    @InjectQueue('notification-queue')
+    private readonly notificationQueue: Queue,
   ) {}
 
   onModuleInit(): void {
@@ -26,7 +30,12 @@ export class PostMutationResolver implements OnModuleInit {
 
   @Mutation('createPost')
   async createPost(@Args('data') data: CreatePostRequest) {
-    return this.postService.createPost(data);
+    const result = await this.postService.createPost(data).toPromise();
+    await this.notificationQueue.add(
+      'create-notification-for-created-post',
+      result,
+    );
+    return result;
   }
 
   @Mutation('updatePost')

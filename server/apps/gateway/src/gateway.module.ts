@@ -6,12 +6,16 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { PostModule } from './modules/post/post.module';
 import { AuthorModule } from './modules/author/author.module';
 import { CommonsModule } from './modules/common/common.module';
+import { QueueModule } from './modules/queue/queue.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
     CommonsModule,
+    QueueModule,
     PostModule,
     AuthorModule,
+    NotificationModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: false,

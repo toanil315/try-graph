@@ -3,3 +3,18 @@ query GetPosts {
     ...BlogItem
   }
 }
+
+query GetPostById($getPostByIdId: ID!) {
+  getPostById(id: $getPostByIdId) {
+    ...BlogDetail
+  }
+}
+
+query GetPostComments($postId: ID!) {
+  getPostComments(postId: $postId) {
+    id
+    comment
+    createAt
+    postId
+  }
+}

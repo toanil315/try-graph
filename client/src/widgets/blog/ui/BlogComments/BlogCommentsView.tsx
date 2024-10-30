@@ -1,4 +1,4 @@
-import { Comment, GetPostCommentsQuery } from '@/generated/schemas';
+import { GetPostCommentsQuery } from '@/generated/schemas';
 import { Button, Input } from '@/shared/ui/Commons';
 import { useState } from 'react';
 

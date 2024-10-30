@@ -7,9 +7,10 @@ import { AuthorModule } from '../author/author.module';
 import { CommonsModule } from '../common/common.module';
 import { PostSubscriptionResolver } from './post-subscription.resolver';
 import PostsLoaders from './post.loader';
+import { QueueModule } from '../queue/queue.module';
 
 @Module({
-  imports: [AuthorModule, CommonsModule],
+  imports: [AuthorModule, CommonsModule, QueueModule],
   controllers: [],
   providers: [
     grpcPostClientProvider,

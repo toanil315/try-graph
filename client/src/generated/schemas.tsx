@@ -74,6 +74,11 @@ export type MutationUpdatePostArgs = {
   id: Scalars['ID']['input'];
 };
 
+export type Notification = {
+  content: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+};
+
 export type Post = {
   author?: Maybe<Author>;
   authorId: Scalars['ID']['output'];
@@ -107,6 +112,7 @@ export type QueryGetPostCommentsArgs = {
 
 export type Subscription = {
   commentAdded: Comment;
+  postCreatedEmit: Notification;
 };
 
 export type SubscriptionCommentAddedArgs = {
@@ -508,6 +514,47 @@ export function useCommentAddedSubscription(
 }
 export type CommentAddedSubscriptionHookResult = ReturnType<typeof useCommentAddedSubscription>;
 export type CommentAddedSubscriptionResult = Apollo.SubscriptionResult<CommentAddedSubscription>;
+export const PostCreatedEmitDocument = gql`
+  subscription PostCreatedEmit {
+    postCreatedEmit {
+      content
+      id
+    }
+  }
+`;
+
+/**
+ * __usePostCreatedEmitSubscription__
+ *
+ * To run a query within a React component, call `usePostCreatedEmitSubscription` and pass it any options that fit your needs.
+ * When your component renders, `usePostCreatedEmitSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostCreatedEmitSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePostCreatedEmitSubscription(
+  baseOptions?: Apollo.SubscriptionHookOptions<
+    PostCreatedEmitSubscription,
+    PostCreatedEmitSubscriptionVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSubscription<PostCreatedEmitSubscription, PostCreatedEmitSubscriptionVariables>(
+    PostCreatedEmitDocument,
+    options,
+  );
+}
+export type PostCreatedEmitSubscriptionHookResult = ReturnType<
+  typeof usePostCreatedEmitSubscription
+>;
+export type PostCreatedEmitSubscriptionResult =
+  Apollo.SubscriptionResult<PostCreatedEmitSubscription>;
 export type BlogItemFragment = {
   id: string;
   title: string;
@@ -618,3 +665,7 @@ export type CommentAddedSubscriptionVariables = Exact<{
 export type CommentAddedSubscription = {
   commentAdded: { id: string; comment: string; createAt: string };
 };
+
+export type PostCreatedEmitSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type PostCreatedEmitSubscription = { postCreatedEmit: { content: string; id: string } };

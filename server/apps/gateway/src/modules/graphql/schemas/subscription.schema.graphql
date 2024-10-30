@@ -1,3 +1,4 @@
 type Subscription {
   commentAdded(postId: ID!): Comment!
+  postCreatedEmit: Notification!
 }
