@@ -1,5 +1,3 @@
-import type { CodegenConfig } from '@graphql-codegen/cli';
-
 const config: CodegenConfig = {
   overwrite: true,
   schema: [
@@ -15,10 +13,25 @@ const config: CodegenConfig = {
   hooks: {
     afterAllFileWrite: ['eslint --fix', 'prettier --write'],
   },
+
   generates: {
-    'src/generated/schemas.tsx': {
+    // Generate base types in `types.ts`
+    'src/generated/types.ts': {
       documents: 'src/entities/**/graphql/*.{gql,graphql}',
-      plugins: ['typescript', 'typescript-react-apollo', 'typescript-operations'],
+      plugins: ['typescript', 'typescript-operations'],
+      config: {
+        skipTypename: true,
+      },
+    },
+
+    // Generate operations and ensure proper type imports
+    'src/generated/schemas.ts': {
+      documents: 'src/entities/**/graphql/*.{gql,graphql}',
+      preset: 'import-types',
+      presetConfig: {
+        typesPath: './types',
+      },
+      plugins: ['typescript-react-apollo'],
       config: {
         withHOC: false,
         withComponent: false,
